@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="none">
+  <rect width="640" height="640" fill="white"/>
+  <g stroke="#111322" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="320" cy="415" cx="0" r="0"/>
+    <circle cx="320" cy="418" r="184" fill="#fff"/>
+    <path d="M242 312c-15-4-24-15-27-31l-9-51c-3-17 9-31 25-28 15 3 23 15 25 30l7 50c2 15-6 27-21 30Z" fill="#fff"/>
+    <path d="M220 202l-16-58M226 205l-32-42M239 210l-18-45M252 216l-7-39"/>
+    <path d="M227 228c-4 31-3 62 4 91"/>
+    <circle cx="320" cy="418" r="103" fill="#111322"/>
+    <circle cx="320" cy="418" r="82" fill="#fff"/>
+    <ellipse cx="322" cy="419" rx="58" ry="72" fill="#111322"/>
+    <ellipse cx="322" cy="405" rx="20" ry="31" fill="#fff"/>
+    <circle cx="335" cy="392" r="8" fill="#fff"/>
+    <path d="M230 345c-26 16-39 42-36 71M407 316c24 28 37 56 35 87M177 480c16 19 35 35 58 48M418 520c24-13 43-30 59-50M178 389c-18 12-30 28-34 48M448 365c17 14 27 31 31 50M267 553c18 14 41 23 67 29M438 476c-18 10-29 22-31 37M224 282c-22-17-43-22-64-14M372 260c28-17 55-20 80-10"/>
+  </g>
+
+  <g stroke="#111322" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="365" cy="118" r="25" fill="#fff"/>
+    <path d="M344 140c-5 18 4 30 21 34 17-4 27-16 22-34" fill="#fff"/>
+    <path d="M343 112c-2-20 8-34 25-38 17 0 29 10 31 28-15-5-34-1-56 10Z" fill="#111322"/>
+    <path d="M360 119l-4 19h14l-5-19M338 139c-21-20-45-29-72-27M326 186c-11 9-22 19-34 31"/>
+    <path d="M341 142c-19 10-29 30-26 58l10 59h88l12-64c4-29-11-49-43-53Z" fill="#fff"/>
+    <path d="M315 174c-24 13-43 30-58 50l-28-35c-9-11-22-12-31-4-9 9-8 23 2 33l43 52c11 13 25 15 39 6l33-21"/>
+    <path d="M309 211l-9 49M405 194l42 93M418 258l49-4"/>
+    <path d="M386 258l-10 83c-3 24-18 44-41 55l-48 23c-20 10-28 28-18 44 12 18 35 18 57 9l61-27c36-16 70-38 83-74l16-44" fill="#111322"/>
+    <path d="M378 341c-24 10-43 27-55 50l-38 49c-8 10-5 23 7 29 14 7 29 1 38-9l44-48 38-14" fill="#111322"/>
+    <path d="M403 260c-5 37-6 76 0 116M323 259l-12 52M393 258l-18 62"/>
+    <path d="M326 298h63l-4 34h-57Z" fill="#fff"/>
+    <path d="M390 345c-14 6-24 17-25 32l-3 31h62l5-54Z" fill="#111322"/>
+    <path d="M377 361c10-3 20-8 27-15M408 375l-23 9M376 389l29-8"/>
+  </g>
+
+  <g stroke="#111322" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M245 194l-15-54c-3-10-13-16-23-13l-12 3c-10 3-15 13-12 23l17 59Z" fill="#111322"/>
+    <path d="M204 132l-25 7M188 151l54 18M198 169l43 15M211 204l35 108M247 315l-17 28"/>
+    <path d="M232 313c-7 21 5 38 22 42 15-5 21-17 17-32l-39-10Z" fill="#111322"/>
+  </g>
+
+  <g stroke="#111322" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M328 168c-11-4-20-11-27-21M340 166c-8-6-14-13-18-22M352 169c-3-8-4-17-3-27"/>
+  </g>
+
+  <text x="320" y="625" text-anchor="middle" fill="#111322" stroke="none" font-family="Arial, Helvetica, sans-serif" font-size="38">Ophthalmology</text>
+</svg>

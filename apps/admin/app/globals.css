@@ -1,0 +1,4 @@
+:root { --ink: #17182a; --brand: #4c3cc4; --paper: #f7f7fb; --line: #e7e7ef; }
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: var(--paper); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+button, input, select, textarea { font: inherit; }

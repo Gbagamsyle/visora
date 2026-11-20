@@ -1,0 +1,712 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DEACTIVATED
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  INACTIVE
+  GRADUATED
+  TRANSFERRED
+}
+
+enum RoleName {
+  STUDENT
+  MODERATOR
+  CONTENT_ADMIN
+  SUPER_ADMIN
+}
+
+enum MaterialType {
+  PDF
+  DOCUMENT
+  PRESENTATION
+  IMAGE
+  VIDEO
+  LINK
+  OTHER
+}
+
+enum MaterialStatus {
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  ARCHIVED
+}
+
+enum QuestionType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  SHORT_ANSWER
+  THEORY
+}
+
+enum QuestionScope {
+  GLOBAL
+  UNIVERSITY
+}
+
+enum TestType {
+  PRACTICE
+  TIMED_TEST
+  MOCK_EXAM
+}
+
+enum TestStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum AttemptStatus {
+  IN_PROGRESS
+  SUBMITTED
+  GRADED
+  EXPIRED
+}
+
+enum PostStatus {
+  PUBLISHED
+  HIDDEN
+  REMOVED
+}
+
+enum NotificationType {
+  ANNOUNCEMENT
+  MATERIAL_APPROVED
+  MATERIAL_REJECTED
+  COMMENT
+  REPLY
+  LIKE
+  FOLLOW
+  SYSTEM
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  RESOLVED
+  DISMISSED
+}
+
+model User {
+  id          String     @id @default(uuid()) @db.Uuid
+  clerkUserId String     @unique
+  email       String     @unique
+  firstName   String?
+  lastName    String?
+  avatarUrl   String?
+  status      UserStatus @default(ACTIVE)
+
+  profile    StudentProfile?
+  enrollment StudentEnrollment?
+  roles      UserRole[]
+
+  uploadedMaterials LearningMaterial[] @relation("MaterialUploader")
+  reviewedMaterials LearningMaterial[] @relation("MaterialReviewer")
+  materialReviews   MaterialReview[]
+  questionsCreated  Question[]         @relation("QuestionCreator")
+  attempts          TestAttempt[]
+
+  posts     Post[]
+  comments  Comment[]
+  likes     PostLike[]
+  saves     PostSave[]
+  followers Follow[]   @relation("Following")
+  following Follow[]   @relation("Follower")
+
+  notifications        Notification[]
+  reports              Report[]           @relation("ReportAuthor")
+  moderationActions    ModerationAction[] @relation("Moderator")
+  auditLogs            AuditLog[]
+  announcementsCreated Announcement[]     @relation("AnnouncementCreator")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model StudentProfile {
+  id          String  @id @default(uuid()) @db.Uuid
+  userId      String  @unique @db.Uuid
+  displayName String?
+  bio         String?
+  phoneNumber String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        RoleName @unique
+  description String?
+
+  users UserRole[]
+}
+
+model UserRole {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  roleId String @db.Uuid
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  assignedAt DateTime @default(now())
+
+  @@unique([userId, roleId])
+  @@index([roleId])
+}
+
+model University {
+  id          String  @id @default(uuid()) @db.Uuid
+  name        String
+  shortName   String?
+  slug        String  @unique
+  country     String  @default("Nigeria")
+  description String?
+  logoUrl     String?
+  isActive    Boolean @default(true)
+
+  programs      Program[]
+  enrollments   StudentEnrollment[]
+  materials     LearningMaterial[]
+  questions     Question[]
+  announcements Announcement[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+}
+
+model Program {
+  id           String  @id @default(uuid()) @db.Uuid
+  universityId String  @db.Uuid
+  name         String
+  code         String?
+  description  String?
+  isActive     Boolean @default(true)
+
+  university University @relation(fields: [universityId], references: [id], onDelete: Restrict)
+
+  levels      AcademicLevel[]
+  courses     Course[]
+  enrollments StudentEnrollment[]
+  materials   LearningMaterial[]
+  questions   Question[]
+  tests       Test[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([universityId, name])
+  @@unique([universityId, code])
+  @@index([universityId, isActive])
+}
+
+model AcademicLevel {
+  id        String  @id @default(uuid()) @db.Uuid
+  programId String  @db.Uuid
+  name      String
+  sortOrder Int
+  isActive  Boolean @default(true)
+
+  program Program @relation(fields: [programId], references: [id], onDelete: Restrict)
+
+  semesters   Semester[]
+  offerings   CourseOffering[]
+  enrollments StudentEnrollment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([programId, name])
+  @@unique([programId, sortOrder])
+  @@index([programId, isActive])
+}
+
+model Semester {
+  id              String  @id @default(uuid()) @db.Uuid
+  academicLevelId String  @db.Uuid
+  name            String
+  sortOrder       Int
+  isActive        Boolean @default(true)
+
+  academicLevel AcademicLevel    @relation(fields: [academicLevelId], references: [id], onDelete: Restrict)
+  offerings     CourseOffering[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([academicLevelId, name])
+  @@unique([academicLevelId, sortOrder])
+  @@index([academicLevelId, isActive])
+}
+
+model Course {
+  id          String  @id @default(uuid()) @db.Uuid
+  programId   String  @db.Uuid
+  code        String
+  title       String
+  description String?
+  creditUnits Int?
+  isActive    Boolean @default(true)
+
+  program Program @relation(fields: [programId], references: [id], onDelete: Restrict)
+
+  offerings CourseOffering[]
+  topics    Topic[]
+  materials LearningMaterial[]
+  questions Question[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([programId, code])
+  @@index([programId, title])
+  @@index([programId, isActive])
+}
+
+model CourseOffering {
+  id              String @id @default(uuid()) @db.Uuid
+  courseId        String @db.Uuid
+  academicLevelId String @db.Uuid
+  semesterId      String @db.Uuid
+
+  course        Course        @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  academicLevel AcademicLevel @relation(fields: [academicLevelId], references: [id], onDelete: Restrict)
+  semester      Semester      @relation(fields: [semesterId], references: [id], onDelete: Restrict)
+
+  @@unique([courseId, academicLevelId, semesterId])
+  @@index([academicLevelId, semesterId])
+  @@index([semesterId])
+}
+
+model StudentEnrollment {
+  id              String           @id @default(uuid()) @db.Uuid
+  userId          String           @unique @db.Uuid
+  universityId    String           @db.Uuid
+  programId       String           @db.Uuid
+  academicLevelId String           @db.Uuid
+  status          EnrollmentStatus @default(ACTIVE)
+  matricNumber    String?
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  university    University    @relation(fields: [universityId], references: [id], onDelete: Restrict)
+  program       Program       @relation(fields: [programId], references: [id], onDelete: Restrict)
+  academicLevel AcademicLevel @relation(fields: [academicLevelId], references: [id], onDelete: Restrict)
+
+  enrolledAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([universityId, programId])
+  @@index([programId, academicLevelId])
+  @@index([status])
+}
+
+model Topic {
+  id          String  @id @default(uuid()) @db.Uuid
+  courseId    String  @db.Uuid
+  title       String
+  description String?
+  sortOrder   Int
+  isActive    Boolean @default(true)
+
+  course    Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  materials LearningMaterial[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([courseId, sortOrder])
+  @@index([courseId, isActive])
+}
+
+model LearningMaterial {
+  id          String         @id @default(uuid()) @db.Uuid
+  title       String
+  description String?
+  type        MaterialType
+  status      MaterialStatus @default(PENDING_REVIEW)
+
+  uploaderId   String  @db.Uuid
+  reviewerId   String? @db.Uuid
+  universityId String  @db.Uuid
+  programId    String  @db.Uuid
+  courseId     String? @db.Uuid
+  topicId      String? @db.Uuid
+
+  fileKey         String?
+  externalUrl     String?
+  originalName    String?
+  mimeType        String?
+  fileSize        BigInt?
+  rejectionReason String?
+  reviewedAt      DateTime?
+  approvedAt      DateTime?
+
+  uploader   User       @relation("MaterialUploader", fields: [uploaderId], references: [id], onDelete: Restrict)
+  reviewer   User?      @relation("MaterialReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  university University @relation(fields: [universityId], references: [id], onDelete: Restrict)
+  program    Program    @relation(fields: [programId], references: [id], onDelete: Restrict)
+  course     Course?    @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  topic      Topic?     @relation(fields: [topicId], references: [id], onDelete: SetNull)
+
+  reviews MaterialReview[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([programId, status, createdAt])
+  @@index([courseId, status])
+  @@index([uploaderId, createdAt])
+  @@index([reviewerId])
+}
+
+model MaterialReview {
+  id         String         @id @default(uuid()) @db.Uuid
+  materialId String         @db.Uuid
+  reviewerId String         @db.Uuid
+  status     MaterialStatus
+  note       String?
+
+  material LearningMaterial @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  reviewer User             @relation(fields: [reviewerId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+
+  @@index([materialId, createdAt])
+  @@index([reviewerId, createdAt])
+}
+
+model Question {
+  id            String        @id @default(uuid()) @db.Uuid
+  type          QuestionType
+  scope         QuestionScope @default(UNIVERSITY)
+  universityId  String?       @db.Uuid
+  programId     String?       @db.Uuid
+  courseId      String?       @db.Uuid
+  body          String
+  explanation   String?
+  correctAnswer String?
+  markingGuide  String?
+  difficulty    Int?
+  isPublished   Boolean       @default(false)
+  createdById   String        @db.Uuid
+
+  university University? @relation(fields: [universityId], references: [id], onDelete: Restrict)
+  program    Program?    @relation(fields: [programId], references: [id], onDelete: Restrict)
+  course     Course?     @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  creator    User        @relation("QuestionCreator", fields: [createdById], references: [id], onDelete: Restrict)
+
+  options       QuestionOption[]
+  testQuestions TestQuestion[]
+  answers       AttemptAnswer[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([scope, isPublished])
+  @@index([universityId, courseId])
+  @@index([programId, courseId])
+  @@index([createdById])
+}
+
+model QuestionOption {
+  id         String  @id @default(uuid()) @db.Uuid
+  questionId String  @db.Uuid
+  text       String
+  isCorrect  Boolean @default(false)
+  sortOrder  Int
+
+  question   Question                @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selections AnswerOptionSelection[]
+
+  @@unique([questionId, sortOrder])
+  @@index([questionId])
+}
+
+model Test {
+  id               String     @id @default(uuid()) @db.Uuid
+  title            String
+  description      String?
+  type             TestType
+  status           TestStatus @default(DRAFT)
+  programId        String?    @db.Uuid
+  durationMin      Int?
+  passMark         Float?
+  shuffleQuestions Boolean    @default(false)
+
+  program   Program?       @relation(fields: [programId], references: [id], onDelete: Restrict)
+  questions TestQuestion[]
+  attempts  TestAttempt[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([programId, status])
+  @@index([type, status])
+}
+
+model TestQuestion {
+  id         String @id @default(uuid()) @db.Uuid
+  testId     String @db.Uuid
+  questionId String @db.Uuid
+  sortOrder  Int
+  marks      Float  @default(1)
+
+  test     Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@unique([testId, questionId])
+  @@unique([testId, sortOrder])
+  @@index([questionId])
+}
+
+model TestAttempt {
+  id          String        @id @default(uuid()) @db.Uuid
+  testId      String        @db.Uuid
+  userId      String        @db.Uuid
+  status      AttemptStatus @default(IN_PROGRESS)
+  startedAt   DateTime      @default(now())
+  submittedAt DateTime?
+  score       Float?
+  totalMarks  Float?
+  percentage  Float?
+
+  test    Test            @relation(fields: [testId], references: [id], onDelete: Restrict)
+  user    User            @relation(fields: [userId], references: [id], onDelete: Restrict)
+  answers AttemptAnswer[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([testId, status])
+  @@index([userId, testId])
+}
+
+model AttemptAnswer {
+  id           String   @id @default(uuid()) @db.Uuid
+  attemptId    String   @db.Uuid
+  questionId   String   @db.Uuid
+  textAnswer   String?
+  isCorrect    Boolean?
+  marksAwarded Float?
+
+  attempt         TestAttempt             @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question        Question                @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  selectedOptions AnswerOptionSelection[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([attemptId, questionId])
+  @@index([questionId])
+}
+
+model AnswerOptionSelection {
+  id               String @id @default(uuid()) @db.Uuid
+  answerId         String @db.Uuid
+  questionOptionId String @db.Uuid
+
+  answer AttemptAnswer  @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  option QuestionOption @relation(fields: [questionOptionId], references: [id], onDelete: Restrict)
+
+  @@unique([answerId, questionOptionId])
+  @@index([questionOptionId])
+}
+
+model Post {
+  id       String     @id @default(uuid()) @db.Uuid
+  authorId String     @db.Uuid
+  content  String
+  status   PostStatus @default(PUBLISHED)
+
+  author   User        @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  media    PostMedia[]
+  comments Comment[]
+  likes    PostLike[]
+  saves    PostSave[]
+  reports  Report[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([authorId, createdAt])
+}
+
+model PostMedia {
+  id        String @id @default(uuid()) @db.Uuid
+  postId    String @db.Uuid
+  fileKey   String
+  mimeType  String
+  sortOrder Int    @default(0)
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+}
+
+model Comment {
+  id       String  @id @default(uuid()) @db.Uuid
+  postId   String  @db.Uuid
+  authorId String  @db.Uuid
+  parentId String? @db.Uuid
+  content  String
+
+  post    Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author  User      @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  parent  Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies Comment[] @relation("CommentReplies")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId, createdAt])
+  @@index([parentId])
+}
+
+model PostLike {
+  id     String @id @default(uuid()) @db.Uuid
+  postId String @db.Uuid
+  userId String @db.Uuid
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+  @@index([userId])
+}
+
+model PostSave {
+  id     String @id @default(uuid()) @db.Uuid
+  postId String @db.Uuid
+  userId String @db.Uuid
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+  @@index([userId])
+}
+
+model Follow {
+  id          String @id @default(uuid()) @db.Uuid
+  followerId  String @db.Uuid
+  followingId String @db.Uuid
+
+  follower  User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([followerId, followingId])
+  @@index([followingId])
+}
+
+model Notification {
+  id      String           @id @default(uuid()) @db.Uuid
+  userId  String           @db.Uuid
+  type    NotificationType
+  title   String
+  message String
+  link    String?
+  readAt  DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, readAt, createdAt])
+}
+
+model Announcement {
+  id           String    @id @default(uuid()) @db.Uuid
+  title        String
+  content      String
+  universityId String?   @db.Uuid
+  createdById  String    @db.Uuid
+  isPublished  Boolean   @default(false)
+  publishedAt  DateTime?
+
+  university University? @relation(fields: [universityId], references: [id], onDelete: Restrict)
+  creator    User        @relation("AnnouncementCreator", fields: [createdById], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([universityId, isPublished, publishedAt])
+}
+
+model Report {
+  id          String       @id @default(uuid()) @db.Uuid
+  authorId    String       @db.Uuid
+  postId      String?      @db.Uuid
+  reason      String
+  description String?
+  status      ReportStatus @default(PENDING)
+
+  author User  @relation("ReportAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+  post   Post? @relation(fields: [postId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([authorId])
+}
+
+model ModerationAction {
+  id          String  @id @default(uuid()) @db.Uuid
+  moderatorId String  @db.Uuid
+  targetType  String
+  targetId    String
+  action      String
+  reason      String?
+
+  moderator User @relation("Moderator", fields: [moderatorId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+
+  @@index([targetType, targetId])
+  @@index([moderatorId, createdAt])
+}
+
+model AuditLog {
+  id         String  @id @default(uuid()) @db.Uuid
+  userId     String? @db.Uuid
+  action     String
+  entityType String
+  entityId   String?
+  metadata   Json?
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([userId, createdAt])
+}
