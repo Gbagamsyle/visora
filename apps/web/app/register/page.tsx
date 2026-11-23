@@ -1,21 +1,23 @@
 import Link from "next/link";
+import { SignUp } from "@clerk/nextjs";
 
 export default function RegisterPage() {
   return (
-    <main style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: 24 }}>
-      <section className="card" style={{ width: "min(520px, 100%)", padding: 32 }}>
+    <main style={{ minHeight: "100vh", display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(440px, 1fr)", background: "white" }}>
+      <section style={{ padding: "28px 42px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         <Link href="/" className="wordmark" style={{ textDecoration: "none" }}><span className="mark">V</span><span>Visora</span></Link>
-        <p className="eyebrow" style={{ marginTop: 32 }}>Create your account</p>
-        <h1 style={{ margin: "10px 0 8px", letterSpacing: "-.04em" }}>Start learning with clarity.</h1>
-        <p style={{ color: "var(--muted)", marginBottom: 24 }}>Set up your profile and academic programme.</p>
-        <form style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-          {[["First name", "Ifeoma"], ["Last name", "Okafor"]].map(([label, placeholder]) => <label key={label} style={{ display: "grid", gap: 7, fontSize: 13, fontWeight: 800 }}>{label}<input aria-label={label} placeholder={placeholder} style={{ height: 46, border: "1px solid var(--line)", borderRadius: 8, padding: "0 12px" }} /></label>)}
-          <label style={{ gridColumn: "1 / -1", display: "grid", gap: 7, fontSize: 13, fontWeight: 800 }}>Email address<input aria-label="Email address" type="email" placeholder="student@uniben.edu" style={{ height: 46, border: "1px solid var(--line)", borderRadius: 8, padding: "0 12px" }} /></label>
-          <label style={{ gridColumn: "1 / -1", display: "grid", gap: 7, fontSize: 13, fontWeight: 800 }}>Password<input aria-label="Password" type="password" placeholder="Create a strong password" style={{ height: 46, border: "1px solid var(--line)", borderRadius: 8, padding: "0 12px" }} /></label>
-          <Link className="button button-primary" href="/onboarding" style={{ gridColumn: "1 / -1", marginTop: 6 }}>Continue</Link>
-        </form>
-        <p style={{ marginTop: 20, textAlign: "center", color: "var(--muted)" }}>Already have an account? <Link href="/login" style={{ color: "var(--brand-700)", fontWeight: 800 }}>Sign in</Link></p>
+        <div style={{ width: "min(440px, 100%)", margin: "auto", padding: "32px 0" }}>
+          <SignUp forceRedirectUrl="/onboarding" signInUrl="/login" />
+        </div>
+        <span style={{ color: "var(--muted)", fontSize: 12 }}>© 2026 Visora</span>
       </section>
+      <aside style={{ margin: 12, borderRadius: 18, background: "var(--brand-950)", color: "white", padding: 44, display: "flex", alignItems: "center" }}>
+        <div>
+          <span className="badge" style={{ background: "rgba(255,255,255,.12)", color: "white" }}>Create your academic space</span>
+          <h2 style={{ maxWidth: 500, margin: "18px 0 10px", fontSize: 46, lineHeight: 1.05, letterSpacing: "-.05em" }}>Learning becomes clearer with the right context.</h2>
+          <p style={{ color: "#C8D7DB", maxWidth: 480, lineHeight: 1.7 }}>Choose your university, Optometry programme, and current academic level.</p>
+        </div>
+      </aside>
     </main>
   );
 }

@@ -12,7 +12,7 @@ export default function HomePage() {
         <div style={{ display: "grid", gap: 16 }}>
           <section className="card" style={{ padding: 22 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}><div><span className="badge">Continue learning</span><h2 style={{ margin: "12px 0 4px", fontSize: 21 }}>Visual Optics</h2><p style={{ margin: 0, color: "var(--muted)", fontSize: 14 }}>Chapter 4 · Schematic and Reduced Eyes</p></div><button className="button button-secondary">Continue</button></div>
-            <div style={{ height: 7, borderRadius: 999, background: "#eeedf4", marginTop: 22, overflow: "hidden" }}><div style={{ width: "68%", height: "100%", background: "var(--brand-700)" }} /></div>
+            <div style={{ height: 7, borderRadius: 999, background: "#eaf0f0", marginTop: 22, overflow: "hidden" }}><div style={{ width: "68%", height: "100%", background: "var(--brand-700)" }} /></div>
             <p style={{ margin: "8px 0 0", color: "var(--muted)", fontSize: 12 }}>68% complete · 24 min remaining</p>
           </section>
 
@@ -30,7 +30,7 @@ export default function HomePage() {
         </div>
 
         <aside style={{ display: "grid", alignContent: "start", gap: 16 }}>
-          <section className="card" style={{ padding: 20, background: "var(--brand-950)", color: "white", border: 0 }}><span className="badge" style={{ background: "rgba(255,255,255,.12)", color: "white" }}>Visora AI</span><h2 style={{ margin: "14px 0 8px", fontSize: 20 }}>Need help understanding a concept?</h2><p style={{ margin: "0 0 18px", color: "#c9c8df", lineHeight: 1.55, fontSize: 14 }}>Ask about visual optics, ocular anatomy, or your course materials.</p><button className="button" style={{ background: "white", color: "var(--brand-950)" }}>Start a conversation</button></section>
+          <section className="card" style={{ padding: 20, background: "var(--brand-950)", color: "white", border: 0 }}><span className="badge" style={{ background: "rgba(255,255,255,.12)", color: "white" }}>Visora AI</span><h2 style={{ margin: "14px 0 8px", fontSize: 20 }}>Need help understanding a concept?</h2><p style={{ margin: "0 0 18px", color: "#C8D7DB", lineHeight: 1.55, fontSize: 14 }}>Ask about visual optics, ocular anatomy, or your course materials.</p><button className="button" style={{ background: "white", color: "var(--brand-950)" }}>Start a conversation</button></section>
           <section className="card" style={{ padding: 20 }}><h2 style={{ margin: "0 0 14px", fontSize: 17 }}>This week</h2>{[["Tue", "Visual Optics quiz", "10:30 AM"], ["Wed", "Clinical Optics practical", "2:00 PM"], ["Fri", "Ocular Physiology tutorial", "9:00 AM"]].map(([day, title, time]) => <div key={title} style={{ display: "grid", gridTemplateColumns: "38px 1fr", gap: 10, padding: "10px 0", borderTop: "1px solid var(--line)" }}><strong style={{ color: "var(--brand-700)", fontSize: 12 }}>{day}</strong><div><b style={{ display: "block", fontSize: 13 }}>{title}</b><span style={{ color: "var(--muted)", fontSize: 12 }}>{time}</span></div></div>)}</section>
           <section className="card" style={{ padding: 20 }}><h2 style={{ margin: "0 0 10px", fontSize: 17 }}>Announcement</h2><p style={{ margin: 0, color: "var(--muted)", lineHeight: 1.55, fontSize: 13 }}>Clinical posting briefing will hold in the Medical Library on Thursday.</p></section>
         </aside>

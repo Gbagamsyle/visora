@@ -9,7 +9,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@clerk/backend": "^3.31.2",
     "@nestjs/common": "^11.1.6",
+    "@nestjs/config": "^12.1.1",
     "@nestjs/core": "^11.1.6",
     "@nestjs/platform-express": "^11.1.6",
     "reflect-metadata": "^0.2.2",

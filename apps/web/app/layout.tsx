@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 
@@ -15,8 +16,10 @@ export const metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" className={manrope.variable}>
-      <body>{children}</body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className={manrope.variable}>
+        <body>{children}</body>
+      </html>
+    </ClerkProvider>
   );
 }

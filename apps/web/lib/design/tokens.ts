@@ -1,21 +1,21 @@
 export const colors = {
   brand: {
-    950: "#17144E",
-    900: "#25205F",
-    700: "#4C3CC4",
-    600: "#5B4BD1",
-    100: "#EFEDFF",
+    950: "#123145",
+    900: "#174C66",
+    700: "#087E8B",
+    600: "#149AA3",
+    100: "#DFF4F2",
   },
-  accent: "#D7A72A",
-  ink: "#201D29",
-  muted: "#747181",
-  canvas: "#FCFBFE",
+  accent: "#DCA95B",
+  ink: "#17242B",
+  muted: "#65777F",
+  canvas: "#F7FAFA",
   surface: "#FFFFFF",
-  line: "#ECEAF2",
+  line: "#DDE7E8",
   success: "#17795C",
   warning: "#A66B1F",
   danger: "#B84242",
-  information: "#4C72C3",
+  information: "#2774A6",
 } as const;
 
 export const radii = {

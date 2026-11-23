@@ -17,21 +17,23 @@ Use **Visora** with the circular **V** brand mark. The mark must remain recogniz
 
 ### Brand colours
 
-- Primary: `#8B53CA`
-- Primary deep: `#70558B`
-- Primary soft: `#EFE7F7`
-- Ink: `#201D29`
-- Muted: `#747181`
-- Canvas: `#FCFBFE`
+- Primary: `#087E8B`
+- Primary light: `#149AA3`
+- Primary deep: `#123145`
+- Primary soft: `#DFF4F2`
+- Ink: `#17242B`
+- Muted: `#65777F`
+- Canvas: `#F7FAFA`
 - Surface: `#FFFFFF`
-- Line: `#ECEAF2`
+- Line: `#DDE7E8`
+- Warm accent: `#DCA95B`
 
 ## 3. Semantic colours
 
 - Success: `#17795C`
 - Warning: `#A66B1F`
 - Danger: `#B84242`
-- Information: `#4C72C3`
+- Information: `#2774A6`
 
 Do not use semantic colours purely for decoration.
 
