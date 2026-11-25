@@ -20,7 +20,11 @@ export default function ProfilePage() {
   return (
     <AppShell active="Profile">
       <section className="profile-hero-new">
-        <div className="profile-cover-art" aria-hidden="true"><i /><i /><i /></div>
+        <div className="profile-cover-art" aria-hidden="true">
+          <span className="profile-cover-caption">STUDENT PROFILE</span>
+          <span className="profile-cover-year">2026 <small>SESSION</small></span>
+          <i /><i /><i />
+        </div>
         <div className="profile-hero-main">
           <span className="profile-avatar-new">{isLoaded && isSignedIn ? initials : "IO"}</span>
           <div className="profile-name-block">
