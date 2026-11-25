@@ -1,15 +1,16 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { BellIcon, HomeIcon, SearchIcon } from "./icons";
+import { Bell, BookOpen, BrainCircuit, House, Search, UsersRound, ClipboardCheck } from "lucide-react";
+import ProfileLink from "./ProfileLink";
 import "./AppShell.css";
 
 const navigation = [
-  ["Home", "/home", "H"],
-  ["Learn", "/learn", "L"],
-  ["Practice", "/practice", "P"],
-  ["Ask Visora AI", "/ai", "AI"],
-  ["Community", "/community", "C"],
-  ["Profile", "/profile", "Pr"],
+  { label: "Home", href: "/home", icon: House },
+  { label: "Learn", href: "/learn", icon: BookOpen },
+  { label: "Practice", href: "/practice", icon: ClipboardCheck },
+  { label: "Ask Visora AI", href: "/ai", icon: BrainCircuit },
+  { label: "Community", href: "/community", icon: UsersRound },
+  { label: "Profile", href: "/profile", icon: null },
 ] as const;
 
 export default function AppShell({ children, active }: { children: ReactNode; active: string }) {
@@ -22,16 +23,14 @@ export default function AppShell({ children, active }: { children: ReactNode; ac
           </Link>
         </div>
         <nav className="app-nav" aria-label="Student navigation">
-          {navigation.map(([label, href, icon]) => (
+          {navigation.map(({ label, href, icon: Icon }) => (
             <Link
               key={href}
               href={href}
               className={active === label ? "active" : ""}
               aria-current={active === label ? "page" : undefined}
             >
-              {label === "Home" ? <HomeIcon size={19} /> : (
-                <b className="nav-icon" aria-hidden="true">{icon}</b>
-              )}
+              {Icon ? <Icon size={19} strokeWidth={1.8} aria-hidden="true" /> : <span className="nav-profile-icon" aria-hidden="true">P</span>}
               <span>{label}</span>
             </Link>
           ))}
@@ -41,16 +40,15 @@ export default function AppShell({ children, active }: { children: ReactNode; ac
       <main className="app-main">
         <header className="app-topbar">
           <button className="search-box" type="button" aria-label="Search Visora">
-            <SearchIcon size={19} />
+            <Search size={19} strokeWidth={1.8} aria-hidden="true" />
             <span>Search courses, materials, questions…</span>
-            <kbd>⌘ K</kbd>
+            <kbd>Ctrl K</kbd>
           </button>
           <div className="topbar-actions">
             <Link className="icon-button" href="/notifications" aria-label="Notifications">
-              <BellIcon size={20} />
-              <span className="notification-dot" aria-label="Unread notifications" />
+              <Bell size={20} strokeWidth={1.8} aria-hidden="true" />
             </Link>
-            <Link href="/profile" className="avatar" aria-label="Open profile for Ifeoma Okafor">IO</Link>
+            <ProfileLink />
           </div>
         </header>
         <div className="app-content">{children}</div>

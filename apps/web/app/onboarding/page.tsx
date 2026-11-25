@@ -25,9 +25,15 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001"}/academic/universities`)
-      .then((response) => response.json())
-      .then(setUniversities)
-      .catch(() => setError("Unable to load universities. Please try again."));
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`University service returned ${response.status}`);
+        return response.json() as Promise<University[]>;
+      })
+      .then((items) => {
+        setUniversities(items);
+        if (items.length === 0) setError("No universities are configured yet. Start the API, apply database migrations, and run the seed command.");
+      })
+      .catch(() => setError("Unable to reach the university service. Make sure PostgreSQL and the NestJS API are running."));
   }, []);
 
   useEffect(() => {
@@ -37,7 +43,10 @@ export default function OnboardingPage() {
     setLevels([]);
     if (!universityId) return;
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001"}/academic/universities/${universityId}/programs`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) throw new Error("Unable to load programmes");
+        return response.json();
+      })
       .then(setPrograms)
       .catch(() => setError("Unable to load programmes. Please try again."));
   }, [universityId]);
@@ -47,7 +56,10 @@ export default function OnboardingPage() {
     setLevels([]);
     if (!programId) return;
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001"}/academic/programs/${programId}/levels`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) throw new Error("Unable to load academic levels");
+        return response.json();
+      })
       .then(setLevels)
       .catch(() => setError("Unable to load academic levels. Please try again."));
   }, [programId]);
