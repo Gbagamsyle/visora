@@ -18,6 +18,7 @@ import {
   Target,
 } from "lucide-react";
 import AppShell from "../../components/AppShell";
+import "./home.css";
 
 interface DashboardData {
   onboardingComplete: boolean;

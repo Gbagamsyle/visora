@@ -3,6 +3,7 @@
 import { useUser } from "@clerk/nextjs";
 import { Award, BookOpen, CalendarDays, CheckCircle2, ChevronRight, Edit3, GraduationCap, Heart, Mail, MapPin, MessageCircle, Settings, ShieldCheck, Target } from "lucide-react";
 import AppShell from "../../components/AppShell";
+import "./profile.css";
 
 export default function ProfilePage() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -19,25 +20,22 @@ export default function ProfilePage() {
 
   return (
     <AppShell active="Profile">
-      <section className="profile-hero-new">
-        <div className="profile-cover-art" aria-hidden="true">
-          <span className="profile-cover-caption">STUDENT PROFILE</span>
-          <span className="profile-cover-year">2026 <small>SESSION</small></span>
-          <i /><i /><i />
-        </div>
-        <div className="profile-hero-main">
-          <span className="profile-avatar-new">{isLoaded && isSignedIn ? initials : "IO"}</span>
-          <div className="profile-name-block">
-            <span className="profile-status"><i /> Active student</span>
+      <section className="profile-revamp">
+        <div className="profile-revamp-main">
+          <span className="profile-avatar-revamp">{isLoaded && isSignedIn ? initials : "IO"}</span>
+          <div className="profile-revamp-identity">
+            <p>STUDENT PROFILE</p>
             <h1>{isLoaded && isSignedIn ? name : "Ifeoma Okafor"}</h1>
-            <p><GraduationCap size={15} /> Doctor of Optometry <span /> 300 Level</p>
+            <span><GraduationCap size={15} /> Doctor of Optometry · 300 Level</span>
           </div>
-          <button className="button button-secondary profile-edit" type="button"><Edit3 size={15} /> Edit profile</button>
         </div>
-        <div className="profile-meta-row">
-          <span><Mail size={14} /> {email}</span>
-          <span><MapPin size={14} /> University of Benin</span>
-          <span><CalendarDays size={14} /> Student since 2024</span>
+        <div className="profile-revamp-details">
+          <div className="profile-revamp-meta">
+            <span><Mail size={14} /><small>Email</small><strong>{email}</strong></span>
+            <span><MapPin size={14} /><small>Institution</small><strong>University of Benin</strong></span>
+            <span><CalendarDays size={14} /><small>Member since</small><strong>2024</strong></span>
+          </div>
+          <button className="button profile-revamp-edit" type="button"><Edit3 size={15} /> Edit profile</button>
         </div>
       </section>
 

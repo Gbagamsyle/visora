@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowUpRight, Bookmark, Heart, MessageCircle, MoreHorizontal, Plus, Search, UsersRound } from "lucide-react";
 import AppShell from "../../components/AppShell";
+import "./community.css";
 
 export default function CommunityPage() {
   const [filter, setFilter] = useState("Latest");

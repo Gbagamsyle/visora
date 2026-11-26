@@ -1,6 +1,6 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
-const protectedRoutes = ["/home", "/learn", "/practice", "/ai", "/community", "/profile", "/notifications", "/onboarding"];
+const protectedRoutes = ["/home", "/learn", "/practice", "/ai", "/community", "/notifications", "/onboarding"];
 
 export default clerkMiddleware(async (auth, request) => {
   const pathname = request.nextUrl.pathname;

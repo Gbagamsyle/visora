@@ -29,6 +29,7 @@ export default function AppShell({ children, active }: { children: ReactNode; ac
               href={href}
               className={active === label ? "active" : ""}
               aria-current={active === label ? "page" : undefined}
+              prefetch={true}
             >
               {Icon ? <Icon size={19} strokeWidth={1.8} aria-hidden="true" /> : <span className="nav-profile-icon" aria-hidden="true">P</span>}
               <span>{label}</span>
@@ -45,7 +46,7 @@ export default function AppShell({ children, active }: { children: ReactNode; ac
             <kbd>Ctrl K</kbd>
           </button>
           <div className="topbar-actions">
-            <Link className="icon-button" href="/notifications" aria-label="Notifications">
+            <Link className="icon-button" href="/notifications" aria-label="Notifications" prefetch={true}>
               <Bell size={20} strokeWidth={1.8} aria-hidden="true" />
             </Link>
             <ProfileLink />
