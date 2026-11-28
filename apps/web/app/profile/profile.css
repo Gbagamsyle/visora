@@ -1,4 +1,29 @@
-/* Revamped split profile identity */
+/* Compact student profile banner, aligned with the learn hero palette */
+.profile-revamp.profile-revamp{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);min-height:172px;overflow:hidden;border:1px solid #e0eaea;border-radius:16px;background:linear-gradient(110deg,#f3f8f7 0%,#fff 58%,#f8fbfa 100%);box-shadow:0 8px 22px rgba(18,49,69,.07)}
+.profile-revamp.profile-revamp::before{position:absolute;z-index:1;top:18px;bottom:18px;left:0;width:3px;border-radius:0 4px 4px 0;background:#16827c;content:""}
+.profile-revamp.profile-revamp::after{position:absolute;z-index:-1;top:-110px;right:-80px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(20,154,163,.08),transparent 70%);content:""}
+.profile-revamp .profile-revamp-main{position:relative;z-index:1;display:flex;align-items:center;gap:18px;min-width:0;overflow:visible;background:transparent;padding:20px 24px;color:#173746}
+.profile-revamp .profile-revamp-main::after{display:none}
+.profile-revamp .profile-avatar-revamp{width:72px;height:72px;border:3px solid #fff;border-radius:21px;background:linear-gradient(145deg,#e5f3ef,#cbe7df);color:#174c66;font-size:22px;box-shadow:0 5px 14px rgba(18,49,69,.09)}
+.profile-revamp .profile-revamp-identity{min-width:0}
+.profile-revamp .profile-revamp-identity p{margin:0 0 8px;color:#16827c;font-size:9px;font-weight:850;letter-spacing:.12em}
+.profile-revamp .profile-revamp-identity p::before{display:none}
+.profile-revamp .profile-revamp-identity h1{max-width:100%;margin:0 0 8px;color:#173746;font-size:26px;line-height:1.08;letter-spacing:-.045em;overflow-wrap:anywhere}
+.profile-revamp .profile-revamp-identity>span{display:inline-flex;align-items:center;gap:6px;max-width:100%;border:0;border-radius:999px;background:#edf6f4;padding:6px 9px;color:#60777b;font-size:10px;font-weight:700}
+.profile-revamp .profile-revamp-identity>span svg{flex:0 0 auto;color:#16827c}
+.profile-revamp .profile-revamp-details{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;gap:8px;min-width:0;border-left:1px solid #e5eded;padding:14px 20px}
+.profile-revamp .profile-revamp-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 12px}
+.profile-revamp .profile-revamp-meta>span{min-width:0;min-height:48px;align-content:center;column-gap:7px;border:0;border-radius:0;background:transparent;padding:5px 0}
+.profile-revamp .profile-revamp-meta>span:first-child{grid-column:1/-1}
+.profile-revamp .profile-revamp-meta svg{color:#16827c}
+.profile-revamp .profile-revamp-meta small{color:#829296;font-size:9px;font-weight:650}
+.profile-revamp .profile-revamp-meta strong{margin-top:3px;color:#29444d;font-size:11px;font-weight:750}
+.profile-revamp .profile-revamp-edit{align-self:flex-end;min-height:34px;border:1px solid #dce8e7;border-radius:9px;background:#fff;padding-inline:12px;color:#173746;font-size:10px;font-weight:800;box-shadow:none;transition:background .18s ease,border-color .18s ease}
+.profile-revamp .profile-revamp-edit:hover{border-color:#b9d8d3;background:#f4faf8}
+@media(max-width:900px){.profile-revamp.profile-revamp{grid-template-columns:1fr}.profile-revamp .profile-revamp-main{min-height:122px;padding:18px 22px}.profile-revamp .profile-revamp-details{flex-direction:row;align-items:center;gap:12px;border-top:1px solid #e5eded;border-left:0;padding:10px 22px 12px}.profile-revamp .profile-revamp-meta{flex:1;grid-template-columns:repeat(3,minmax(0,1fr))}.profile-revamp .profile-revamp-meta>span:first-child{grid-column:auto}.profile-revamp .profile-revamp-edit{align-self:center;flex:0 0 auto}}
+@media(max-width:560px){.profile-revamp.profile-revamp{border-radius:14px}.profile-revamp .profile-revamp-main{gap:14px;min-height:102px;padding:14px 16px}.profile-revamp .profile-avatar-revamp{width:58px;height:58px;border-radius:17px;font-size:18px}.profile-revamp .profile-revamp-identity p{margin-bottom:5px;font-size:8px}.profile-revamp .profile-revamp-identity h1{margin-bottom:6px;font-size:clamp(20px,6vw,25px)}.profile-revamp .profile-revamp-identity>span{gap:5px;padding:5px 7px;font-size:9px}.profile-revamp .profile-revamp-details{gap:8px;padding:8px 14px 10px}.profile-revamp .profile-revamp-meta{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 8px}.profile-revamp .profile-revamp-meta>span:first-child{grid-column:1/-1}.profile-revamp .profile-revamp-meta>span{min-height:42px}.profile-revamp .profile-revamp-meta strong{font-size:10px}.profile-revamp .profile-revamp-edit{min-height:32px;padding-inline:9px;font-size:9px}}
+
+/* Existing profile page styles */
 .profile-revamp{display:grid;grid-template-columns:minmax(280px,.85fr) minmax(420px,1.15fr);min-height:236px;overflow:hidden;border:1px solid #dde8e8;border-radius:18px;background:#fff;box-shadow:0 10px 28px rgba(18,49,69,.07)}
 .profile-revamp-main{position:relative;display:flex;align-items:center;gap:18px;overflow:hidden;background:linear-gradient(135deg,#12384a 0%,#174c5b 62%,#1d716c 100%);padding:28px;color:#fff}.profile-revamp-main::after{position:absolute;right:-76px;bottom:-118px;width:260px;height:260px;border:1px solid rgba(255,255,255,.10);border-radius:50%;content:"";box-shadow:0 0 0 30px rgba(255,255,255,.025),0 0 0 62px rgba(255,255,255,.018)}
 .profile-avatar-revamp{position:relative;z-index:1;width:94px;height:94px;display:grid;place-items:center;flex:0 0 auto;border:4px solid rgba(255,255,255,.84);border-radius:24px;background:linear-gradient(145deg,#b9e5dc,#78bdae);color:#12384a;font-size:23px;font-weight:850;box-shadow:0 10px 24px rgba(8,30,40,.18)}

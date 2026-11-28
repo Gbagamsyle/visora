@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^7.10.5",
+    "@visora/shared": "workspace:*",
     "lucide-react": "^1.58.0",
     "next": "^15.5.6",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.18.12",

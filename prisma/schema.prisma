@@ -76,6 +76,13 @@ enum AttemptStatus {
   EXPIRED
 }
 
+enum FlashcardRating {
+  AGAIN
+  HARD
+  GOOD
+  EASY
+}
+
 enum PostStatus {
   PUBLISHED
   HIDDEN
@@ -116,8 +123,13 @@ model User {
   uploadedMaterials LearningMaterial[] @relation("MaterialUploader")
   reviewedMaterials LearningMaterial[] @relation("MaterialReviewer")
   materialReviews   MaterialReview[]
+  savedMaterials    MaterialSave[]
+  materialViews     MaterialView[]
   questionsCreated  Question[]         @relation("QuestionCreator")
+  flashcardsCreated Flashcard[]        @relation("FlashcardCreator")
   attempts          TestAttempt[]
+  flashcardReviews  FlashcardReview[]
+  aiConversations   AiConversation[]
 
   posts     Post[]
   comments  Comment[]
@@ -188,6 +200,7 @@ model University {
   enrollments   StudentEnrollment[]
   materials     LearningMaterial[]
   questions     Question[]
+  flashcards    Flashcard[]
   announcements Announcement[]
 
   createdAt DateTime @default(now())
@@ -211,6 +224,7 @@ model Program {
   enrollments StudentEnrollment[]
   materials   LearningMaterial[]
   questions   Question[]
+  flashcards  Flashcard[]
   tests       Test[]
 
   createdAt DateTime @default(now())
@@ -275,6 +289,7 @@ model Course {
   topics    Topic[]
   materials LearningMaterial[]
   questions Question[]
+  flashcards Flashcard[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -331,6 +346,8 @@ model Topic {
 
   course    Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
   materials LearningMaterial[]
+  questions Question[]
+  flashcards Flashcard[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -370,6 +387,8 @@ model LearningMaterial {
   topic      Topic?     @relation(fields: [topicId], references: [id], onDelete: SetNull)
 
   reviews MaterialReview[]
+  savedBy MaterialSave[]
+  views   MaterialView[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -396,6 +415,33 @@ model MaterialReview {
   @@index([reviewerId, createdAt])
 }
 
+model MaterialSave {
+  userId     String   @db.Uuid
+  materialId String   @db.Uuid
+  createdAt  DateTime @default(now())
+
+  user     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  material LearningMaterial @relation(fields: [materialId], references: [id], onDelete: Cascade)
+
+  @@id([userId, materialId])
+  @@index([userId, createdAt])
+  @@index([materialId])
+}
+
+model MaterialView {
+  userId       String   @db.Uuid
+  materialId   String   @db.Uuid
+  lastViewedAt DateTime @default(now())
+  viewCount    Int      @default(1)
+
+  user     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  material LearningMaterial @relation(fields: [materialId], references: [id], onDelete: Cascade)
+
+  @@id([userId, materialId])
+  @@index([userId, lastViewedAt])
+  @@index([materialId])
+}
+
 model Question {
   id            String        @id @default(uuid()) @db.Uuid
   type          QuestionType
@@ -403,17 +449,21 @@ model Question {
   universityId  String?       @db.Uuid
   programId     String?       @db.Uuid
   courseId      String?       @db.Uuid
+  topicId       String?       @db.Uuid
   body          String
   explanation   String?
   correctAnswer String?
   markingGuide  String?
   difficulty    Int?
+  examYear      Int?
+  examSession   String?
   isPublished   Boolean       @default(false)
   createdById   String        @db.Uuid
 
   university University? @relation(fields: [universityId], references: [id], onDelete: Restrict)
   program    Program?    @relation(fields: [programId], references: [id], onDelete: Restrict)
   course     Course?     @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  topic      Topic?      @relation(fields: [topicId], references: [id], onDelete: SetNull)
   creator    User        @relation("QuestionCreator", fields: [createdById], references: [id], onDelete: Restrict)
 
   options       QuestionOption[]
@@ -426,6 +476,8 @@ model Question {
   @@index([scope, isPublished])
   @@index([universityId, courseId])
   @@index([programId, courseId])
+  @@index([topicId, isPublished])
+  @@index([examYear, examSession])
   @@index([createdById])
 }
 
@@ -487,6 +539,7 @@ model TestAttempt {
   status      AttemptStatus @default(IN_PROGRESS)
   startedAt   DateTime      @default(now())
   submittedAt DateTime?
+  expiresAt   DateTime?
   score       Float?
   totalMarks  Float?
   percentage  Float?
@@ -507,9 +560,18 @@ model AttemptAnswer {
   id           String   @id @default(uuid()) @db.Uuid
   attemptId    String   @db.Uuid
   questionId   String   @db.Uuid
+  position     Int      @default(0)
   textAnswer   String?
   isCorrect    Boolean?
   marksAwarded Float?
+  needsReview  Boolean        @default(false)
+  questionBody String?
+  questionType QuestionType?
+  marksSnapshot Float?
+  explanation  String?
+  correctAnswer String?
+  markingGuide String?
+  optionsSnapshot Json?
 
   attempt         TestAttempt             @relation(fields: [attemptId], references: [id], onDelete: Cascade)
   question        Question                @relation(fields: [questionId], references: [id], onDelete: Restrict)
@@ -519,6 +581,7 @@ model AttemptAnswer {
   updatedAt DateTime @updatedAt
 
   @@unique([attemptId, questionId])
+  @@unique([attemptId, position])
   @@index([questionId])
 }
 
@@ -532,6 +595,47 @@ model AnswerOptionSelection {
 
   @@unique([answerId, questionOptionId])
   @@index([questionOptionId])
+}
+
+model Flashcard {
+  id           String  @id @default(uuid()) @db.Uuid
+  front        String
+  back         String
+  isPublished  Boolean @default(false)
+  universityId String? @db.Uuid
+  programId    String? @db.Uuid
+  courseId     String? @db.Uuid
+  topicId      String? @db.Uuid
+  createdById  String? @db.Uuid
+
+  university University? @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  program    Program?    @relation(fields: [programId], references: [id], onDelete: Cascade)
+  course     Course?     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  topic      Topic?      @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  createdBy  User?       @relation("FlashcardCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  reviews    FlashcardReview[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isPublished, programId, courseId])
+  @@index([topicId, isPublished])
+}
+
+model FlashcardReview {
+  userId         String         @db.Uuid
+  flashcardId    String         @db.Uuid
+  rating         FlashcardRating
+  reviewCount    Int            @default(0)
+  lastReviewedAt DateTime?
+  nextDueAt      DateTime       @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  flashcard Flashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)
+
+  @@id([userId, flashcardId])
+  @@index([userId, nextDueAt])
+  @@index([flashcardId])
 }
 
 model Post {
@@ -709,4 +813,32 @@ model AuditLog {
 
   @@index([entityType, entityId])
   @@index([userId, createdAt])
+}
+
+model AiConversation {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages AiMessage[]
+
+  @@index([userId, updatedAt])
+}
+
+model AiMessage {
+  id             String   @id @default(uuid()) @db.Uuid
+  conversationId String   @db.Uuid
+  role           String
+  content        String
+  citations      Json      @default("[]")
+  status         String    @default("COMPLETED")
+  errorMessage   String?
+  createdAt      DateTime  @default(now())
+
+  conversation AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
 }

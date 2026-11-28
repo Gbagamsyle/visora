@@ -1,5 +1,4 @@
-export { IconBase } from "./Icon";
-export type { IconProps } from "./Icon";
+export type { LucideProps as IconProps } from "lucide-react";
 export { HomeIcon } from "./HomeIcon";
 export { SearchIcon } from "./SearchIcon";
 export { BellIcon } from "./BellIcon";

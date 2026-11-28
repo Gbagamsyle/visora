@@ -1,0 +1,2 @@
+.history-panel{padding:18px}.history-panel .practice-history-row{grid-template-columns:36px minmax(0,1fr) auto 100px 16px}.history-panel .practice-history-copy strong{font-size:11px}
+@media(max-width:650px){.history-panel{padding:13px}.history-panel .practice-history-row{grid-template-columns:30px minmax(0,1fr) 78px 14px;gap:7px}.history-panel .practice-result-status{display:none}}

@@ -1,18 +1,19 @@
 import Link from "next/link";
+import { ArrowRight, BookOpen, Check, ClipboardCheck, Sparkles, UsersRound } from "lucide-react";
 import "./page.css";
 
-function Icon({ type }: { type: "book" | "practice" | "ai" | "community" | "arrow" | "check" }) {
-  const paths = {
-    book: <><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v15h4.5a2.5 2.5 0 0 1 2.5 2.5z"/></>,
-    practice: <><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 14 3-3 3 2 4-5"/><path d="M7 8h2"/></>,
-    ai: <><path d="M12 3 14.2 8.8 20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/><path d="M19 3v4M17 5h4"/></>,
-    community: <><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2"/><path d="M3 19c.6-3.4 2.6-5 6-5s5.4 1.6 6 5M15 14c3.2 0 5 1.4 5.5 4"/></>,
-    arrow: <><path d="M5 12h14M13 6l6 6-6 6"/></>,
-    check: <path d="m5 12 4 4L19 6"/>,
+const landingIcons = {
+  book: BookOpen,
+  practice: ClipboardCheck,
+  ai: Sparkles,
+  community: UsersRound,
+  arrow: ArrowRight,
+  check: Check,
+} as const;
 
-  };
-
-  return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[type]}</svg>;
+function Icon({ type }: { type: keyof typeof landingIcons }) {
+  const LucideIcon = landingIcons[type];
+  return <LucideIcon size={24} strokeWidth={1.8} aria-hidden="true" />;
 }
 
 const universities = ["University of Benin", "University of Lagos", "University of Ibadan", "Ahmadu Bello University", "University of Nigeria", "Other universities"];
@@ -154,7 +155,7 @@ export default function HomePage() {
               <p>Ask questions, exchange resources and follow conversations that help you understand more.</p>
               <div className="community-actions"><Link className="landing-button landing-button-primary" href="/register">Join Visora <Icon type="arrow" /></Link><Link className="landing-button landing-button-outline" href="/login">Learn more</Link></div>
             </div>
-            <div className="community-visual" aria-hidden="true"><div className="community-card card-a"><span>AM</span><p><b>Visual Optics</b><small>Shared a study note</small></p></div><div className="community-card card-b"><span>IO</span><p><b>Clinical Optics</b><small>Started a discussion</small></p></div><div className="community-card card-c"><span>UE</span><p><b>Ocular Anatomy</b><small>Saved a resource</small></p></div><div className="community-spark">✦</div></div>
+            <div className="community-visual" aria-hidden="true"><div className="community-card card-a"><span>AM</span><p><b>Visual Optics</b><small>Shared a study note</small></p></div><div className="community-card card-b"><span>IO</span><p><b>Clinical Optics</b><small>Started a discussion</small></p></div><div className="community-card card-c"><span>UE</span><p><b>Ocular Anatomy</b><small>Saved a resource</small></p></div><Sparkles className="community-spark" size={58} strokeWidth={1.5} /></div>
           </div>
         </section>
 

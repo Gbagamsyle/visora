@@ -1,0 +1,8 @@
+.learn-resource.learning-material-row{grid-template-columns:38px minmax(0,1fr) 68px 82px 32px 32px;gap:10px}
+.learning-material-title{overflow:hidden;color:inherit;font-size:12px;font-weight:800;text-decoration:none;text-overflow:ellipsis;white-space:nowrap}
+.learning-material-title:hover{color:#087e8b}
+.learning-row-action{width:30px;height:30px;display:grid;place-items:center;border:1px solid #e3ebeb;border-radius:9px;background:#fff;color:#718487;text-decoration:none;transition:background .16s ease,border-color .16s ease,color .16s ease}
+.learning-row-action:hover,.learning-row-action[aria-pressed="true"]{border-color:#cce3df;background:#edf7f4;color:#087e8b}
+.learning-row-action:disabled{opacity:.55;cursor:wait}
+@media(max-width:900px){.learn-resource.learning-material-row{grid-template-columns:38px minmax(0,1fr) 64px 32px 32px}.learn-resource.learning-material-row time{display:none}}
+@media(max-width:560px){.learn-resource.learning-material-row{grid-template-columns:34px minmax(0,1fr) 30px 30px;gap:7px}.learn-resource.learning-material-row .resource-type{display:none}.learn-resource.learning-material-row .learning-row-action{width:28px;height:28px}}
